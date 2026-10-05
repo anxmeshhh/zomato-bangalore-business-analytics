@@ -1,0 +1,28 @@
+# Large raw data files (>100MB GitHub push limit)
+zomato.csv
+*.zip
+*.parquet
+
+# Power BI binary files (can be tracked if <100MB, but usually large)
+*.pbix
+*.pbit
+
+# Python & Environment
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+
+# Jupyter Checkpoints
+.ipynb_checkpoints/
+
+# Non-Zomato Coursework Files
+SUPERSTORE DATASET/
+SQLQuery*.sql
+create_sales_excel.py
+PowerBI_First_Experiment_Sales.xlsx
+
+# OS metadata
+Thumbs.db
+.DS_Store

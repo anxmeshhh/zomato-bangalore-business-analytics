@@ -1,0 +1,93 @@
+{
+  "name": "ZomatoAnalyticsTheme",
+  "dataColors": [
+    "#E23744",
+    "#1C2938",
+    "#008080",
+    "#FFAA00",
+    "#43A047",
+    "#5E35B1",
+    "#00ACC1",
+    "#FB8C00"
+  ],
+  "background": "#F8F9FA",
+  "foreground": "#1C2938",
+  "tableAccent": "#E23744",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#E0E0E0"
+              }
+            },
+            "radius": 6
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#000000"
+              }
+            },
+            "transparency": 95,
+            "position": "Outer"
+          }
+        ],
+        "title": [
+          {
+            "fontFamily": "Segoe UI",
+            "fontSize": 12,
+            "color": {
+              "solid": {
+                "color": "#1C2938"
+              }
+            },
+            "bold": true
+          }
+        ]
+      }
+    },
+    "card": {
+      "*": {
+        "labels": [
+          {
+            "color": {
+              "solid": {
+                "color": "#E23744"
+              }
+            },
+            "fontSize": 24,
+            "fontFamily": "Segoe UI Semibold"
+          }
+        ],
+        "categoryLabels": [
+          {
+            "color": {
+              "solid": {
+                "color": "#555555"
+              }
+            },
+            "fontSize": 10,
+            "fontFamily": "Segoe UI"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+// ==============================================================================
+// ZOMATO BANGALORE - POWER BI DAX MEASURES LIBRARY
+// ==============================================================================
+
+// 1. Total Restaurants
+Total Restaurants = COUNTROWS(zomato_powerbi)
+
+// 2. Average Rating
+Average Rating = AVERAGE(zomato_powerbi[rate])
+
+// 3. Average Cost for Two
+Average Cost for Two = AVERAGE(zomato_powerbi[approx_cost])
+
+// 4. Total Votes (Customer Engagement)
+Total Votes = SUM(zomato_powerbi[votes])
+
+// 5. Average Votes Per Outlet
+Average Votes = AVERAGE(zomato_powerbi[votes])
+
+// 6. Online Ordering Share %
+Online Order Share % = 
+DIVIDE(
+    CALCULATE(COUNTROWS(zomato_powerbi), zomato_powerbi[online_order] = "Yes"),
+    COUNTROWS(zomato_powerbi),
+    0
+)
+
+// 7. Table Booking Share %
+Table Booking Share % = 
+DIVIDE(
+    CALCULATE(COUNTROWS(zomato_powerbi), zomato_powerbi[book_table] = "Yes"),
+    COUNTROWS(zomato_powerbi),
+    0
+)
+
+// 8. Top Rated Outlets Count (Rating >= 4.0)
+Top Rated Outlets = 
+CALCULATE(
+    COUNTROWS(zomato_powerbi),
+    zomato_powerbi[rate] >= 4.0
+)
+
+// 9. Top Rated Outlets Share %
+Top Rated Share % = 
+DIVIDE([Top Rated Outlets], [Total Restaurants], 0)
+
+// 10. Table Booking Rating Lift (Rating difference)
+Table Booking Lift = 
+VAR WithBooking = CALCULATE(AVERAGE(zomato_powerbi[rate]), zomato_powerbi[book_table] = "Yes")
+VAR WithoutBooking = CALCULATE(AVERAGE(zomato_powerbi[rate]), zomato_powerbi[book_table] = "No")
+RETURN
+WithBooking - WithoutBooking

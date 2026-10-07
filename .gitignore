@@ -3,8 +3,8 @@ zomato.csv
 *.zip
 *.parquet
 
-# Power BI binary files (can be tracked if <100MB, but usually large)
-*.pbix
+# Power BI binary files - large ones excluded but dashboard included
+# *.pbix   <- Removed so Zomato dashboard.pbix gets tracked
 *.pbit
 
 # Python & Environment

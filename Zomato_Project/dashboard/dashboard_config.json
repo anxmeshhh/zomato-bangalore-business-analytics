@@ -1,0 +1,4 @@
+{
+  "_help": "Optional. After publishing the report to app.powerbi.com, paste its embed / 'Publish to web' link here to show the full interactive report inside the dashboard.",
+  "embed_url": ""
+}

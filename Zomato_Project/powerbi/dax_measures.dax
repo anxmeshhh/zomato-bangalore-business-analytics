@@ -50,3 +50,61 @@ VAR WithBooking = CALCULATE(AVERAGE(zomato_powerbi[rate]), zomato_powerbi[book_t
 VAR WithoutBooking = CALCULATE(AVERAGE(zomato_powerbi[rate]), zomato_powerbi[book_table] = "No")
 RETURN
 WithBooking - WithoutBooking
+
+// ==============================================================================
+// ANIMATED SVG MEASURES (data category = Image URL)
+// Shown in Image visuals. SMIL animations replay every time a filter changes.
+// Inside the data URI: '#' is written %23 and '%' is written %25.
+// ==============================================================================
+
+// 11. Animated ring: average rating out of 5
+Rating Ring SVG =
+VAR v = [Average Rating]
+VAR len = FORMAT(DIVIDE(v, 5) * 251.3, "0.0", "en-US")
+RETURN
+"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='140' viewBox='0 0 180 140'>"
+& "<circle cx='90' cy='62' r='44' fill='none' stroke='%23F6B3B9' stroke-width='2' opacity='0'><animate attributeName='r' values='44;58' dur='2.4s' repeatCount='indefinite'/><animate attributeName='opacity' values='0.8;0' dur='2.4s' repeatCount='indefinite'/></circle>"
+& "<circle cx='90' cy='62' r='40' fill='none' stroke='%23FCE1E4' stroke-width='11'/>"
+& "<circle cx='90' cy='62' r='40' fill='none' stroke='%23E23744' stroke-width='11' stroke-linecap='round' stroke-dasharray='0 251.3' transform='rotate(-90 90 62)'><animate attributeName='stroke-dasharray' from='0 251.3' to='" & len & " 251.3' dur='1.4s' fill='freeze' calcMode='spline' keyTimes='0;1' keySplines='0.2 0.8 0.2 1'/></circle>"
+& "<text x='90' y='70' text-anchor='middle' font-family='Segoe UI' font-size='22' font-weight='700' fill='%231D1D22' opacity='0'>" & FORMAT(v, "0.00", "en-US") & "<animate attributeName='opacity' from='0' to='1' begin='0.5s' dur='0.6s' fill='freeze'/></text>"
+& "<text x='90' y='130' text-anchor='middle' font-family='Segoe UI' font-size='11.5' fill='%238B8C96'>Avg rating out of 5</text></svg>"
+
+// 12. Animated ring: share of outlets rated 4.0+
+Top Rated Ring SVG =
+VAR p = [Top Rated Share %]
+VAR len = FORMAT(p * 251.3, "0.0", "en-US")
+RETURN
+"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='140' viewBox='0 0 180 140'>"
+& "<circle cx='90' cy='62' r='44' fill='none' stroke='%23F6B3B9' stroke-width='2' opacity='0'><animate attributeName='r' values='44;58' dur='2.4s' begin='0.8s' repeatCount='indefinite'/><animate attributeName='opacity' values='0.8;0' dur='2.4s' begin='0.8s' repeatCount='indefinite'/></circle>"
+& "<circle cx='90' cy='62' r='40' fill='none' stroke='%23FCE1E4' stroke-width='11'/>"
+& "<circle cx='90' cy='62' r='40' fill='none' stroke='%23A3121F' stroke-width='11' stroke-linecap='round' stroke-dasharray='0 251.3' transform='rotate(-90 90 62)'><animate attributeName='stroke-dasharray' from='0 251.3' to='" & len & " 251.3' dur='1.4s' begin='0.15s' fill='freeze' calcMode='spline' keyTimes='0;1' keySplines='0.2 0.8 0.2 1'/></circle>"
+& "<text x='90' y='70' text-anchor='middle' font-family='Segoe UI' font-size='22' font-weight='700' fill='%231D1D22' opacity='0'>" & FORMAT(p * 100, "0.0", "en-US") & "%25<animate attributeName='opacity' from='0' to='1' begin='0.6s' dur='0.6s' fill='freeze'/></text>"
+& "<text x='90' y='130' text-anchor='middle' font-family='Segoe UI' font-size='11.5' fill='%238B8C96'>Outlets rated 4.0+</text></svg>"
+
+// 13. Animated bars: avg rating with vs without table booking
+Booking Lift SVG =
+VAR w = CALCULATE([Average Rating], zomato_powerbi[book_table] = "Yes")
+VAR wo = CALCULATE([Average Rating], zomato_powerbi[book_table] = "No")
+VAR bw = FORMAT(COALESCE(DIVIDE(w, 5), 0) * 156, "0.0", "en-US")
+VAR bwo = FORMAT(COALESCE(DIVIDE(wo, 5), 0) * 156, "0.0", "en-US")
+VAR tw = IF(ISBLANK(w), "-", FORMAT(w, "0.00", "en-US"))
+VAR two = IF(ISBLANK(wo), "-", FORMAT(wo, "0.00", "en-US"))
+VAR lift = IF(ISBLANK(w) || ISBLANK(wo), "n/a", FORMAT(w - wo, "+0.00;-0.00;0.00", "en-US"))
+VAR anim = " dur='1.2s' fill='freeze' calcMode='spline' keyTimes='0;1' keySplines='0.2 0.8 0.2 1'/>"
+RETURN
+"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='140' viewBox='0 0 180 140'>"
+& "<g font-family='Segoe UI'>"
+& "<text x='12' y='30' font-size='11' fill='%238B8C96'>With booking</text><text x='168' y='30' text-anchor='end' font-size='12' font-weight='700' fill='%231D1D22'>" & tw & "</text>"
+& "<rect x='12' y='37' width='156' height='12' rx='6' fill='%23FCE1E4'/><rect x='12' y='37' width='0' height='12' rx='6' fill='%23E23744'><animate attributeName='width' from='0' to='" & bw & "'" & anim & "</rect>"
+& "<text x='12' y='72' font-size='11' fill='%238B8C96'>Without booking</text><text x='168' y='72' text-anchor='end' font-size='12' font-weight='700' fill='%231D1D22'>" & two & "</text>"
+& "<rect x='12' y='79' width='156' height='12' rx='6' fill='%23FCE1E4'/><rect x='12' y='79' width='0' height='12' rx='6' fill='%23EE7B85'><animate attributeName='width' from='0' to='" & bwo & "' begin='0.2s'" & anim & "</rect>"
+& "<text x='90' y='126' text-anchor='middle' opacity='0'><tspan font-size='19' font-weight='700' fill='%23A3121F'>" & lift & "</tspan><tspan font-size='11' fill='%238B8C96'> rating lift</tspan><animate attributeName='opacity' from='0' to='1' begin='0.9s' dur='0.6s' fill='freeze'/></text>"
+& "</g></svg>"
+
+// 14. Pulsing live pill: outlets in the current filter context
+Live Pill SVG =
+"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='290' height='44' viewBox='0 0 290 44'>"
+& "<rect x='1' y='1' width='288' height='42' rx='21' fill='white' stroke='%23F1C9CD'/>"
+& "<circle cx='24' cy='22' r='5' fill='none' stroke='%23E23744' stroke-width='2'><animate attributeName='r' values='5;14' dur='1.6s' repeatCount='indefinite'/><animate attributeName='opacity' values='0.9;0' dur='1.6s' repeatCount='indefinite'/></circle>"
+& "<circle cx='24' cy='22' r='5' fill='%23E23744'/>"
+& "<text x='42' y='27' font-family='Segoe UI' font-size='13' fill='%234A4B54'><tspan font-weight='700' fill='%23E23744'>LIVE</tspan>  " & FORMAT([Total Restaurants], "#,0", "en-US") & " outlets in view</text></svg>"

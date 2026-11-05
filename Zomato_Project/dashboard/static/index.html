@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zomato Bangalore Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23E23744'/%3E%3Crect x='7' y='16' width='4' height='9' rx='1.5' fill='white'/%3E%3Crect x='14' y='11' width='4' height='14' rx='1.5' fill='white'/%3E%3Crect x='21' y='6' width='4' height='19' rx='1.5' fill='white'/%3E%3C/svg%3E">
+</head>
+<body>
+  <!-- ================= HERO ================= -->
+  <header class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1.4"/><rect x="10" y="7" width="4" height="14" rx="1.4"/><rect x="17" y="3" width="4" height="18" rx="1.4"/></svg>
+          </span>
+          <span class="brand-name">Zomato Bangalore</span>
+          <span class="brand-sep">/</span>
+          <span class="brand-sub">BI &amp; Analytics Command Center</span>
+        </div>
+        <h1>What makes a Bangalore restaurant <em>rate well</em>?</h1>
+        <p class="lede">Every number below is queried from your Power BI model.
+          <strong>Click any bar, bubble or cell</strong> to filter the whole page, like a Power BI slicer.</p>
+
+        <div class="hero-figure">
+          <div class="hf">
+            <div class="hero-label">Average rating</div>
+            <div class="hero-value"><span id="hero-rating" data-count>—</span><span class="hero-of">/ 5</span></div>
+          </div>
+          <div class="hf">
+            <div class="hero-label">Table-booking lift</div>
+            <div class="hero-value small" id="hero-lift">—</div>
+          </div>
+          <div class="hf">
+            <div class="hero-label">Restaurants in view</div>
+            <div class="hero-value small" id="hero-rows">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Power BI connection panel -->
+      <aside class="conn" id="conn" aria-live="polite">
+        <div class="conn-head">
+          <span class="pbi-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1.2"/><rect x="10" y="7" width="4" height="14" rx="1.2"/><rect x="17" y="3" width="4" height="18" rx="1.2"/></svg>
+          </span>
+          <div class="conn-titles">
+            <div class="conn-title">Power BI connection</div>
+            <div class="conn-file" id="conn-file">Zomato dashboard.pbix</div>
+          </div>
+          <span class="pill" id="conn-pill"><span class="dot"></span><span id="conn-state">Checking…</span></span>
+        </div>
+        <div class="conn-body">
+          <div class="conn-row"><span>Engine</span><strong id="conn-engine">—</strong></div>
+          <div class="conn-row"><span>Queries</span><strong id="conn-mode">—</strong></div>
+          <div class="conn-row"><span>Last sync</span><strong id="conn-sync">—</strong></div>
+          <div class="conn-tables" id="conn-tables"></div>
+          <p class="conn-reason" id="conn-reason" hidden></p>
+        </div>
+        <div class="conn-actions">
+          <button class="btn btn-primary" id="btn-open" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+            <span id="btn-open-label">Open in Power BI</span>
+          </button>
+          <button class="btn btn-ghost" id="btn-sync" type="button" title="Re-query the model now">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg>
+            Re-sync
+          </button>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <!-- ================= FILTERS ================= -->
+  <nav class="filters" id="filters" aria-label="Filters">
+    <div class="filters-inner">
+      <label class="field"><span>Location</span>
+        <select id="f-location" data-filter="location"><option value="">All locations</option></select></label>
+      <label class="field"><span>Dining format</span>
+        <select id="f-format" data-filter="format"><option value="">All formats</option></select></label>
+      <label class="field"><span>Cuisine</span>
+        <select id="f-cuisine" data-filter="cuisine"><option value="">All cuisines</option></select></label>
+      <label class="field"><span>Listing type</span>
+        <select id="f-listing" data-filter="listing"><option value="">All types</option></select></label>
+      <div class="field"><span>Online ordering</span>
+        <div class="seg" data-filter="online" role="group" aria-label="Online ordering">
+          <button type="button" data-v="">All</button><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button>
+        </div></div>
+      <div class="field"><span>Table booking</span>
+        <div class="seg" data-filter="booking" role="group" aria-label="Table booking">
+          <button type="button" data-v="">All</button><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button>
+        </div></div>
+      <div class="query-meta" id="query-meta"><span class="qm-dot"></span><span id="qm-text">Connecting…</span></div>
+    </div>
+    <div class="chips" id="chips" hidden></div>
+    <div class="progress" id="progress"></div>
+  </nav>
+
+  <main class="page">
+    <section class="kpis" id="kpis" aria-label="Key figures"></section>
+
+    <section class="grid" id="grid">
+      <article class="card c8" data-chart="rating_dist"></article>
+      <article class="card c4" data-chart="service"></article>
+
+      <article class="card c4" data-chart="votes"></article>
+      <article class="card c4" data-chart="cost_online"></article>
+      <article class="card c4" data-chart="cost"></article>
+
+      <article class="card c6" data-chart="top_share"></article>
+      <article class="card c6" data-chart="format_rings"></article>
+
+      <article class="card c6" data-chart="formats"></article>
+      <article class="card c6" data-chart="cuisines"></article>
+
+      <article class="card c7" data-chart="locations"></article>
+      <article class="card c5" data-chart="listing"></article>
+
+      <article class="card c8" data-chart="scatter"></article>
+      <article class="card c4" data-chart="ml"></article>
+
+      <article class="card c7" data-chart="leaders"></article>
+      <article class="card c5 takeaways" id="takeaways"></article>
+
+      <article class="card c12 report" id="report-card"></article>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Zomato Bangalore restaurants · Power BI model <code>zomato_powerbi</code> · SQL Server <code>ZomatoDB</code></span>
+    <span id="foot-source"></span>
+  </footer>
+
+  <div class="tooltip" id="tooltip" role="tooltip"></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
